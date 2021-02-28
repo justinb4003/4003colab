@@ -1,0 +1,478 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "4003 Intro 02.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyO++pzlW+NBpjO6/rp3Nm/a",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/justinb4003/4003colab/blob/main/Intro_02_Async\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "pi-NKuEix26-"
+      },
+      "source": [
+        "We're going to make a major leap from lesson 01 to this one and generally blow by a lot of basic Python concepts just to get to something fun (hopefully) and illustrate what we're going to be working with.\n",
+        "\n",
+        "Mostly, this is driven by the hopes that if you find something useful you'll continue working with it.  A lot of early learning in programming is done just by altering something you already have and gradually making it do something else.  Eventually details will become important but for now I'm happy to gloss over them.  If you want to drill down into why a [ is being used instead of a ( somewhere, I'm more than happy to.  \n",
+        "\n",
+        "But, without knowing a thing about programming if I told you I wrote this so that team Trisonics, team number 4003, had 38 students on the team and we wanted to change that to 34, you could probably sort that change out yourself.\n",
+        "\n",
+        "I'm also going to start making comments inline with the code.  Comments, in Python, are lines that start with the # sign.  I'm just doing this otherwise you'd have to press a play button for every single line of code."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "AVXa8vp8z1vh"
+      },
+      "source": [
+        "# Here we're importing the pandas library under the 'pd' name\n",
+        "# This is so that when we type pd. (the dot is important, not the end of a \n",
+        "# sentence) Python knows to look in the Pandas library for the code behind \n",
+        "# that.  This will probably be at the top of everything you write, likely \n",
+        "# joined by more imports over time.\n",
+        "import pandas as pd\n",
+        "\n",
+        "# Step one is to create some data representing team name, team number, and the \n",
+        "# number of students on the team\n",
+        "team_data  = [['Trisonics',     4003, 38],\n",
+        "              ['MARS Rovers',   4004, 18],\n",
+        "              ['Killer Bees',     33, 56]]\n",
+        "\n",
+        "# Cell doesn't produce output so we print something to signal it finished\n",
+        "print('Data initialized')"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "FAjTBtiy0d9X"
+      },
+      "source": [
+        "![intro02_spreadsheet_example.png](data:image/png;base64,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)\n",
+        "\n",
+        "\n",
+        "The above is a list within a list, technically, but you can think of it as a 2d grid like a spreadsheet, like in the picture.  The Trisonics line is a 'row' of data and each other team also has their own row of data.  The combined list of the team names is called a column, much like a spreadsheet, and in pandas this can be called a Series at times in the technical documentation.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Jruv-TNH76aT"
+      },
+      "source": [
+        "# Now we turn this raw data into a Pandas dataframe\n",
+        "df = pd.DataFrame(team_data, columns=['team_name', 'team_number', 'students'])\n",
+        "# The above is calling a function and storing the return value in 'df'\n",
+        "# Programming functions are very much like math functions such as\n",
+        "# y = f(x) or y = f(x, z) where you feed a function some parameters and it \n",
+        "# returns a value.  In this case we fed it our data structure and a list of \n",
+        "# strings to use as column names.\n",
+        "\n",
+        "# At point in our code 'df' represents the general idea of the spreasheet\n",
+        "# image above, and we can do spreadsheet type things to do that very easily.\n",
+        "\n",
+        "# For instance if we want the average number of studnets on a team we would\n",
+        "# do this:\n",
+        "avg_students = df['students'].mean()\n",
+        "# Minimum number of students on a team\n",
+        "min_students = df['students'].min()\n",
+        "# Maximum number of students on a team\n",
+        "max_students = df['students'].max()\n",
+        "\n",
+        "# Activate debugger tool to inspect values!\n",
+        "print(avg_students, min_students, max_students)"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "3fqZnNr-3mns"
+      },
+      "source": [
+        "# We can just look at the df itself too... looks like a spreadsheet!\n",
+        "df"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "tUVgqt2u47LC"
+      },
+      "source": [
+        "# I wonder what the average team name is...\n",
+        "df['team_name'].mean()"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "YFRS6Xp55_9x"
+      },
+      "source": [
+        "Well, the answer is nothing fun.  This is what happens with an exception is thrown, or as you can think of it, when your program blows up.\n",
+        "\n",
+        "In this case it's angry because we asked for the mean value of the team name and it can't conver Trisonics, MARS Rovers, or Killer Bees to numeric values.  It's an entirely reasonable complaint but it is rather cryptic about it.\n",
+        "\n",
+        "The 'Search Stack Overflow' button can be handy, though it's hard to sort through the responses to determine what answer(s) apply to you, if any, when beginning.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_JsoHQP4jnV_"
+      },
+      "source": [
+        "# This entire cell sets up \"helper\" functions.\n",
+        "# Step one is to pull in a new library via the pip command line tool.\n",
+        "# Prefixing a line with a ! (bang!) mark tells the notebook environment to\n",
+        "# run this on a command line, not as part of the Python code.\n",
+        "!pip install fsspec\n",
+        "\n",
+        "# To pull data from The Blue Alliance we'll use their API available via HTTP\n",
+        "# In short we make an HTTP request (like your web browser does to retrieve\n",
+        "# a web page, or update an app) that goes somewhere like this:\n",
+        "# https://www.thebluealliance.com/api/v3/teams/2020/0\n",
+        "# ... which tells TBA we'd like a list of TEAMS from 2020 and show us page 0\n",
+        "# That returns a JSON document which is a programming-friendly way of\n",
+        "# communicating structured data between systems.\n",
+        "# The response will look something like this:\n",
+        "\"\"\"\n",
+        "  {\n",
+        "    \"key\": \"frc4003\",\n",
+        "    \"team_number\": 4003,\n",
+        "    \"nickname\": \"TriSonics\",\n",
+        "    etc...\n",
+        "\"\"\"\n",
+        "# But you don't really see that; we'll just pop it into a dataframe as a nice\n",
+        "# handy container for us to use.\n",
+        "\n",
+        "import io\n",
+        "import json\n",
+        "import requests\n",
+        "\n",
+        "def get_tba_url_as_df(url):\n",
+        "  \"\"\"\n",
+        "  Retrieves a URL from The Blue Alliance and converts it to a dataframe\n",
+        "  \"\"\"\n",
+        "  tba = 'https://www.thebluealliance.com/api/v3'\n",
+        "  # We must specify this extra HTTP header so TBA knows what account is\n",
+        "  # accessing the data.\n",
+        "  headers = {'X-TBA-Auth-Key': 'VUdGT41tnb2MLMfXSX0QvPSDDyi0aMVzmxLTWar8wjCmZvNFZfZiq7sHfhAtWgbO'}\n",
+        "  full_url = f'{tba}{url}'\n",
+        "  # Uncomment this to see the URL you'r trying to contact.  Sometimes a simple\n",
+        "  # mistake like having two slashes (//) instead of one (/) means the server\n",
+        "  # can't process your request.\n",
+        "  # print(f'Retrieving {full_url}')\n",
+        "  r = requests.get(full_url, headers=headers)\n",
+        "  json_data = r.text\n",
+        "  df = pd.read_json(io.StringIO(json_data))\n",
+        "  return df \n",
+        "\n",
+        "\n",
+        "def get_teams_df(year):\n",
+        "    \"\"\"\n",
+        "    Repeatedly calls the teams/<year>/X URL to build a complete dataframe with\n",
+        "    all FRC team data that TBA has\n",
+        "    \n",
+        "    Parameters:\n",
+        "    -----------\n",
+        "        year: str\n",
+        "            Year to locate active teams \n",
+        "    Returns:\n",
+        "    --------\n",
+        "    DataFrame\n",
+        "        DataFrame will contain every team found for the given year\n",
+        "    \"\"\"\n",
+        "\n",
+        "\n",
+        "    # Initiailize our dataframe object to a simple None value, which means\n",
+        "    # nothing, null, zero, blank, something akin to that.\n",
+        "    teams_df = None\n",
+        "\n",
+        "    # We keep a running count of how many teams we've discovered to determine\n",
+        "    # when we should stop.\n",
+        "    full_team_count = 0\n",
+        "    last_team_count = 0\n",
+        "    # We'll hard-code a maximum of 25 pages of results that we will look at.\n",
+        "    # That sets the upper team number limit at 25 * 500 = 12,500.  We're safe for now.\n",
+        "    for page_index in range(25):\n",
+        "        partial_df = get_tba_url_as_df(f'/teams/{year}/{page_index}') \n",
+        "        \n",
+        "        # If teams_df is still None that means this is our first pass through\n",
+        "        # the data and we'll use our partial dataframe of data to initialize\n",
+        "        # the final one\n",
+        "        if teams_df is None:\n",
+        "            teams_df = partial_df\n",
+        "        # Else, if it wasn't the first time through, we have the final\n",
+        "        # dataframe already started, so we need to append() the partial one\n",
+        "        # to the largert one\n",
+        "        else:\n",
+        "            teams_df = teams_df.append(partial_df)\n",
+        "        \n",
+        "        # Now we take a count of how many teams we've found so far.\n",
+        "        # It's a little odd, because we're useing teams_df.index which\n",
+        "        # returns and index number for each row of data, then taking the\n",
+        "        # length/len() of that to get the total count.\n",
+        "        full_team_count = len(teams_df.index)\n",
+        "        \n",
+        "        # If we've still got the seame number of teams that we had on the\n",
+        "        # last run through this loop then we must be done.\n",
+        "        if full_team_count != last_team_count:\n",
+        "            last_team_count = full_team_count\n",
+        "        else:\n",
+        "            break\n",
+        "    return teams_df\n",
+        "\n",
+        "def get_team_events_df(team_key, year):\n",
+        "    \"\"\"\n",
+        "    Parameters:\n",
+        "    -----------\n",
+        "        team_key: str\n",
+        "            TBA key for a team. Example: 'frc4003'\n",
+        "        year: str\n",
+        "            Year of events we're looking for\n",
+        "    Returns:\n",
+        "    --------\n",
+        "    DataFrame\n",
+        "        DataFrame contains information on every event a team participated in\n",
+        "        for the given year.\n",
+        "    \"\"\"\n",
+        "    df = get_tba_url_as_df(f'/team/{team_key}/events/{year}')\n",
+        "    return df\n",
+        "\n",
+        "def get_event_df(event_key):\n",
+        "    \"\"\"\n",
+        "    Parameters:\n",
+        "    -----------\n",
+        "        team_key: str\n",
+        "            TBA key for a team. Example: 'frc4003'\n",
+        "        year: str\n",
+        "            Year of events we're looking for\n",
+        "    Returns:\n",
+        "    --------\n",
+        "    DataFrame\n",
+        "        DataFrame contains information on every event a team participated in\n",
+        "        for the given year.\n",
+        "    \"\"\"\n",
+        "    df = get_tba_url_as_df(f'/event/{event_key}/simple')\n",
+        "    return df\n",
+        "\n",
+        "def get_event_matches_df(event_key):\n",
+        "    \"\"\"\n",
+        "    Parameters:\n",
+        "    -----------\n",
+        "        event_key: str\n",
+        "            TBA key for an event. Example: '2020misjo'\n",
+        "    Returns:\n",
+        "    --------\n",
+        "    DataFrame\n",
+        "        DataFrame contains information on every match for the given event key.\n",
+        "    \"\"\"\n",
+        "    df = get_tba_url_as_df(f'/event/{event_key}/matches')\n",
+        "    return df\n",
+        "\n",
+        "def get_events_df(year):\n",
+        "    \"\"\"\n",
+        "    Parameters:\n",
+        "    -----------\n",
+        "        year: str\n",
+        "            Year of events we're looking for\n",
+        "    Returns:\n",
+        "    --------\n",
+        "    DataFrame\n",
+        "        DataFrame contains information on every event in a year.\n",
+        "    \"\"\"\n",
+        "    df = get_tba_url_as_df(f'/events/{year}')\n",
+        "    return df\n",
+        "\n",
+        "\n",
+        "print('Execution completed!')"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "jsKLrxnLwkDq"
+      },
+      "source": [
+        "# Use our helper function get_teams_df() to get a dataframe with every\n",
+        "# team in it\n",
+        "teams_df = get_teams_df('2020')"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "LnO-kynUxUBF"
+      },
+      "source": [
+        "# Now let's filter down the team list to our own record\n",
+        "condition = teams_df['team_number'] == 4003\n",
+        "team4003 = teams_df[condition]\n",
+        "team4003"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ce_DxzFZyX9Y"
+      },
+      "source": [
+        "# And then extract our 'key' from it that we use to find our events\n",
+        "# Here we take the first and only row in the teams4003 dataframe\n",
+        "# which is row 0, and extract the value for the 'key' column.\n",
+        "key4003 = team4003.iloc[0]['key']\n",
+        "print(f'Key for 4003: {key4003}')\n",
+        "\n",
+        "# Or for now I'll skip the lookup process because our key is pretty easy\n",
+        "# to remember.\n",
+        "# key4003 = 'frc4003'\n",
+        "events_df = get_team_events_df(key4003, '2020')\n",
+        "events_df"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "VZBlFDOP5M81"
+      },
+      "source": [
+        "# Let's look at our MI St Joe matches\n",
+        "matches_df = get_event_matches_df('2020misjo')\n",
+        "matches_df"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "8-LeRqFZ0-hI"
+      },
+      "source": [
+        "Well, that's kind of fun.  There's a predicted_time value for each match and an actual_time value. If you were taking a look at this data in a spreadsheet you could make another column with a calculated formula, and we can do something like that here in Python/Pandas too."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "k_HOyaVl_v69"
+      },
+      "source": [
+        "# Let's make a column that has the difference between the actual start time \n",
+        "# and predicted time  in minutes.\n",
+        "from datetime import timedelta\n",
+        "matches_df['timediff_minutes'] = (matches_df['actual_time'] - matches_df['predicted_time'])/timedelta(minutes=1)\n",
+        "# Now we have a new column in our dataframe called timediff_minutes.\n",
+        "# Let's look at it.\n",
+        "matches_df"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "9wN5lOyO12Q7"
+      },
+      "source": [
+        "matches_df['timediff_minutes'].mean()"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "R9-WAddN4yHV"
+      },
+      "source": [
+        "Well, that was neat.  We can pull some data from the internet and do things with it!  Now, you could have probably pulled that data and dropped it into a spreadsheet and found the answer to this problem pretty easy, but let's do it for every event in the system for the year!"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "v5KxibnT4dZB"
+      },
+      "source": [
+        "from datetime import timedelta\n",
+        "\n",
+        "match_delay = {} # Create an empty dict.  Lesson 1.5 (optional) covers these\n",
+        "events_df = get_events_df('2020')\n",
+        "for event_key in events_df['key']:\n",
+        "    event_matches = get_event_matches_df(event_key)\n",
+        "    # Skip trying to process if it we get an empty record.\n",
+        "    if len(event_matches.index) == 0:\n",
+        "        continue;\n",
+        "\n",
+        "    event_matches['timediff_minutes'] = (event_matches['actual_time'] - event_matches['predicted_time'])/timedelta(minutes=1)\n",
+        "    match_average =  event_matches['timediff_minutes'].mean()\n",
+        "    # Only keep the match_average value if we return an actual number\n",
+        "    # Some events have incorrect values for actual_time and they don't compute\n",
+        "    # properly.\n",
+        "    if not pd.isnull(match_average):\n",
+        "        match_delay[event_key] = match_average"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "j_hvLnAFEbmJ"
+      },
+      "source": [
+        "Well, that's kind of fun!  We now have a dictionary listing every event code and their average match delay time."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "iZRkuu-sEaiU"
+      },
+      "source": [
+        "match_delay"
+      ],
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
